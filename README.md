@@ -1,60 +1,100 @@
-# 虚拟女友人格卡片系统
+# Virtual GF Personality System
 
-基于 Docker 的多用户人格切换系统，支持动态学习和人格适应。
+A FastAPI-based backend for a virtual girlfriend personality system with dynamic learning capabilities and multiple personality cards.
 
-## 🚀 快速开始
+## 🚀 Features
 
-### 1. 克隆项目
-```bash
-git clone <your-repo-url>
-cd virtual-gf-system
+- **User Management**: Create and manage user profiles
+- **Personality Cards**: Multiple personality configurations per user
+- **Dynamic Learning**: Store and adapt based on conversation history
+- **Conversation History**: Full message tracking with sentiment analysis
+- **Database Schema**: Optimized PostgreSQL schema with JSONB support
+- **Docker Ready**: Complete Docker Compose setup for easy deployment
+
+## 📦 Project Structure
+
+```
+.
+├── .env                     # Environment variables
+├── docker-compose.yml       # Multi-service orchestration
+├── Dockerfile.api           # FastAPI application container
+├── requirements.txt         # Python dependencies
+├── app/
+│   ├── __init__.py
+│   └── main.py             # FastAPI application with all endpoints
+└── database/
+    └── init.sql            # Database initialization script
 ```
 
-### 2. 配置环境变量
-```bash
-cp .env.example .env
-# 编辑 .env 文件，设置安全的密码和密钥
-nano .env
-```
+## 🛠️ Setup
 
-### 3. 启动服务
-```bash
-docker-compose up -d
-```
+### Prerequisites
+- Docker and Docker Compose
+- Python 3.11+ (for local development)
 
-### 4. 验证部署
-```bash
-# 检查容器状态
-docker-compose ps
+### Quick Start
+1. Clone the repository
+2. Set your database password in `.env`:
+   ```bash
+   DB_PASSWORD=your_secure_password_here
+   ```
+3. Start the services:
+   ```bash
+   docker-compose up -d
+   ```
+4. API will be available at `http://localhost:8000`
 
-# 查看数据库日志
-docker-compose logs db
-```
+### API Endpoints
 
-## 🗃️ 数据库结构
+#### Users
+- `POST /users/` - Create new user
+- `GET /users/{user_id}` - Get user details
 
-- **users**: 用户信息
-- **personality_cards**: 人格卡片（支持 JSONB 动态字段）
-- **conversation_history**: 对话历史（用于机器学习）
-- **personality_switches**: 人格切换日志
+#### Personality Cards
+- `POST /users/{user_id}/personalities/` - Create personality card
+- `GET /users/{user_id}/personalities/` - List all personalities
+- `GET /users/{user_id}/personalities/active` - Get active personality
+- `PUT /users/{user_id}/personalities/{personality_id}/activate` - Activate personality
 
-## 🔄 人格切换功能
+#### Conversations
+- `POST /users/{user_id}/conversations/` - Add conversation message
+- `GET /users/{user_id}/conversations/` - Get conversation history
 
-- 支持手动切换人格
-- 自动学习用户偏好
-- 基于对话上下文的智能适应
-- 多用户隔离，数据安全
+## 🐳 Docker Compose Services
 
-## 🔧 开发说明
+- **db**: PostgreSQL 15 database with custom initialization
+- **api**: FastAPI application with asyncpg database connection
+- **redis**: Optional Redis cache for session management
 
-- 使用 PostgreSQL UUID 扩展
-- JSONB 字段支持灵活的人格数据结构
-- 预配置了性能优化索引
-- 容器化部署，易于扩展
+## 📝 Environment Variables
 
-## 📝 下一步
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DB_PASSWORD` | `secure_password_123` | Database password |
+| `DATABASE_URL` | `postgresql://admin:secure_password_123@db:5432/virtual_gf` | Database connection URL |
 
-1. 实现 FastAPI 后端服务
-2. 集成 LLM 进行人格学习
-3. 开发前端界面
-4. 添加用户认证系统
+## 🔒 Security
+
+- Uses PostgreSQL SCRAM-SHA-256 authentication
+- Non-root user in Docker containers
+- Environment variables for sensitive data
+
+## 📈 Database Schema
+
+The system uses three main tables:
+
+1. **users**: User profiles with unique usernames
+2. **personality_cards**: Personality configurations with JSONB traits
+3. **conversation_history**: Message logs with sentiment scores and context
+
+## 🤖 Future Enhancements
+
+- [ ] WebSocket support for real-time conversations
+- [ ] Machine learning integration for personality adaptation
+- [ ] User authentication and authorization
+- [ ] API documentation with Swagger/OpenAPI
+- [ ] Testing suite with pytest
+
+## 📄 License
+
+MIT License

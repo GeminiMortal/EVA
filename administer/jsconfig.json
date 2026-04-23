@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "module": "esnext",
     "baseUrl": "./",
-    "moduleResolution": "node",
+    "moduleResolution": "node10",
     "paths": {
       "@/*": [
         "src/*"
@@ -14,6 +14,15 @@
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
-  }
+    ],
+    // 添加此行以忽略 baseUrl 弃用警告
+    "ignoreDeprecations": "6.0"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

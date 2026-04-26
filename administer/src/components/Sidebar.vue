@@ -19,14 +19,25 @@
     </nav>
 
     <div class="sidebar-footer" v-if="!collapsed">
-      <p>{{ footerText }}</p>
+      <button class="logout-btn" @click="handleLogout">
+        <span class="logout-icon">🚪</span>
+        <span>退出登录</span>
+      </button>
+      <p class="copyright">{{ footerText }}</p>
     </div>
   </aside>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+import auth from '@/utils/auth'
+
 export default {
   name: 'AppSidebar',
+  setup() {
+    const router = useRouter()
+    return { router }
+  },
   props: {
     title: {
       type: String,
@@ -39,9 +50,12 @@ export default {
     menuItems: {
       type: Array,
       default: () => [
-        { name: '首页', path: '/', icon: '🏠' },
-        { name: '用户管理', path: '/client', icon: '👥' },
-        { name: '关于', path: '/about', icon: 'ℹ️' }
+        { name: '仪表盘', path: '/', icon: '📊' },
+        { name: '用户管理', path: '/users', icon: '👥' },
+        { name: '订单管理', path: '/orders', icon: '📋' },
+        { name: '礼物管理', path: '/gifts', icon: '🎁' },
+          { name: '现实礼物管理', path: '/tgifts', icon: '🎁' },
+        { name: '钱包管理', path: '/wallet', icon: '💰' }
       ]
     }
   },
@@ -54,6 +68,14 @@ export default {
     toggleSidebar() {
       this.collapsed = !this.collapsed
       this.$emit('toggle', this.collapsed)
+    },
+    handleLogout() {
+      if (confirm('确定要退出登录吗？')) {
+        // 清除认证信息
+        auth.logout()
+        // 跳转到登录页
+        this.router.push('/login')
+      }
     }
   }
 }
@@ -177,8 +199,36 @@ export default {
   color: #95a5a6;
 }
 
-.sidebar-footer p {
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.logout-btn:hover {
+  background: rgba(231, 76, 60, 0.3);
+  transform: translateY(-2px);
+}
+
+.logout-icon {
+  font-size: 16px;
+}
+
+.copyright {
   margin: 0;
+  font-size: 12px;
+  color: #95a5a6;
 }
 
 /* 滚动条样式 */
